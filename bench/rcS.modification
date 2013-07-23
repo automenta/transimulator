@@ -18,6 +18,7 @@ fi
 #echo "Script from M5 readfile is empty, starting bash shell..."
 #/bin/bash
 
-time python /bench/nbody.py
+echo "Starting NBody Benchmark"
+m5 dumpresetstats
+time python /bench/nbody.py 200
 m5 exit
-
