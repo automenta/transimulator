@@ -1,0 +1,25 @@
+gem5 snippets:
+	export M5_PATH='/home/me/transimulator/tool/gem5/system/x86'
+	gem5/build/ALPHA/gem5.debug gem5/configs/example/fs.py # (ckpt-02.png)
+	gem5/build/ALPHA/gem5.debug gem5/configs/example/fs.py --detailed --caches --l2cache -r 1 # (ckpt-11.png)
+	build/X86/gem5.opt configs/example/fs.py --disk-image='linux-x86.img' --kernel='x86_64-vmlinux-2.6.22.9'
+	required transforming in the config file: all =y -> =’y’ &&& all =m -> =’m’
+	build/X86/gem5.opt -v configs/example/fs.py -h
+	build/X86/gem5.opt -v --trace-start=0 configs/example/fs.py --disk-image=linux-x86.img --kernel=x86_64-vmlinux-2.6.22.9.smp --mem-size=256MB --l2cache --caches -n 2
+	dd if=/dev/zero of=system/x86/disks/linux-bigswap2.img bs=1024 count=64000 #create swap file
+
+	/bin/mount -o loop,offset=32256 /z/foo.img /mount/point
+
+	util/term/m5term 3456
+
+	in m5 term:
+		time ps
+
+	m5 dumpresetstats
+	m5 exit
+	m5 dump
+
+	Valid benchmarks are: ArmAndroid-GB, ArmAndroid-ICS, IScsiInitiator, IScsiTarget, MutexTest, NetperfMaerts, NetperfStream, NetperfStreamNT, NetperfStreamUdp, NetperfUdpLocal, Nfs, NfsTcp, Nhfsstone, Ping, PovrayAutumn, PovrayBench, SurgeSpecweb, SurgeStandard, ValAccDelay, ValAccDelay2, ValCtxLat, ValMemLat, ValMemLat2MB, ValMemLat8MB, ValStream, ValStreamCopy, ValStreamScale, ValSysLat, ValTlbLat, Validation, bbench-gb, bbench-ics
+	http://gem5.org/Disk_images
+	./gem5img.py mount ../system/x86/disks/linux-x86.img /tmp/li
+

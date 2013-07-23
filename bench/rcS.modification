@@ -1,0 +1,23 @@
+#!/bin/sh
+#
+# /etc/init.d/rcS
+#
+
+echo "mounting filesystems..."
+mount -a 
+mount -o remount,rw /dev/root /
+
+echo "loading script..."
+/sbin/m5 readfile > /tmp/script
+chmod 755 /tmp/script
+
+if [ -s /tmp/script ]; then
+	exec /tmp/script
+fi
+
+#echo "Script from M5 readfile is empty, starting bash shell..."
+#/bin/bash
+
+time python /bench/nbody.py
+m5 exit
+
