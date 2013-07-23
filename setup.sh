@@ -1,7 +1,8 @@
 #!/bin/bash
 
 echo 'Installing packages: libprotobuf-dev libgoogle-perftools-dev'
-sudo apt-get install libprotobuf-dev libgoogle-perftools-dev
+# Note: there may be other packages necessary; add them here:
+sudo apt-get install libprotobuf-dev libgoogle-perftools-dev gcc-multilib m4
 
 
 pushd .

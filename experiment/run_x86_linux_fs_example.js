@@ -1,8 +1,8 @@
 require('./run_x86_linux_fs').runX86LinuxFS({
     
     trace: false,
-    memSize: '256MB',
-    diskImage: 'linux-x86-seth.img',
+    memSize: '128MB',
+    diskImage: 'nbody_c.img',
     l2Cache: true,
     
     callback: function(error, stdout, stderr, outdir) {
@@ -19,7 +19,7 @@ require('./run_x86_linux_fs').runX86LinuxFS({
             var line = array[i];
             
             if (line.indexOf('---------- Begin')==0) {
-                currentSnapShot = { };
+                currentSnapShot = [];
                 continue;
             }
             else if (line.indexOf('---------- End')==0) {

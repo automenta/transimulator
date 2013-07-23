@@ -1,0 +1,8 @@
+Snippets:
+
+	./new_experiment_disk.sh nbody_c 'm5 dumpresetstats ; time /exp/nbody 2000 ; m5 dumpresetstats ; m5 exit' c/
+
+
+Programming Language Shootout (benchmarks in several languages):
+	https://raw.github.com/kragen/shootout/
+
