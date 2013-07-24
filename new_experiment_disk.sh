@@ -1,5 +1,7 @@
 #!/bin/bash
 
+./losetup_detach.sh >/dev/null 2>/dev/null
+
 if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
 	echo 'Usage: new_experiment_disk.sh [new disk name] [startup commands] [experiment directory source]'
 	exit
@@ -28,6 +30,6 @@ echo $2 >> etc/init.d/rcS
 popd
 
 sudo mkdir /tmp/md_$BASHPID/exp
-sudo cp -R $3/* /tmp/md_$BASHPID/exp
+sudo cp -R experiment/$3/* /tmp/md_$BASHPID/exp
 
 sudo umount /tmp/md_$BASHPID

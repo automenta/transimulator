@@ -57,13 +57,13 @@ function runX86LinuxFS(params) {
  * 
  */
     
-    var cmd = '../tool/gem5/build/X86/gem5.fast ' + gem5Options + ' ../tool/gem5/configs/example/fs.py ' + archOptions;
+    var cmd = 'tool/gem5/build/X86/gem5.fast ' + gem5Options + ' tool/gem5/configs/example/fs.py ' + archOptions;
     
     console.log('Executing:');
     console.log(cmd);
     
     var options = {
-        env: { 'M5_PATH': '../tool/gem5/system/x86' },
+        env: { 'M5_PATH': 'tool/gem5/system/x86' },
     };
     
     var proc = exec(cmd, options, function(error, stdout, stderr) {

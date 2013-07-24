@@ -40,7 +40,7 @@ require('./run_x86_linux_fs').runX86LinuxFS({
         console.log(js);
         var fs = require('fs');
         
-        var resultFile = '../result/' + process.pid + '-' + Date.now() + '.js';
+        var resultFile = 'result/' + process.pid + '-' + Date.now() + '.js';
         fs.writeFile(resultFile, 'exports.experiment = ' + js, function(err) {
             if(err) {
                 console.log(err);
