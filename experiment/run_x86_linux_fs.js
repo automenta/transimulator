@@ -57,7 +57,7 @@ function runX86LinuxFS(params) {
  * 
  */
     
-    var cmd = '../tool/gem5/build/X86/gem5.opt ' + gem5Options + ' ../tool/gem5/configs/example/fs.py ' + archOptions;
+    var cmd = '../tool/gem5/build/X86/gem5.fast ' + gem5Options + ' ../tool/gem5/configs/example/fs.py ' + archOptions;
     
     console.log('Executing:');
     console.log(cmd);

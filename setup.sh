@@ -19,7 +19,7 @@ ls -l gem5
 
 cd gem5
 yes 'y' | scons -j5   #change j1|2|3|4.. for how many compiler processes
-yes 'y' | scons build/X86/gem5.opt -j3
+yes 'y' | scons build/X86/gem5.fast -j3 # for debugging, change to .opt for reasons given here: http://www.m5sim.org/Build_System
 #yes 'y' | scons build/ARM/gem5.opt -j3
 
     pushd .
