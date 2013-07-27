@@ -1,7 +1,7 @@
 var exec = require('child_process').exec;
     
 
-function runX86LinuxFS(params) {
+function runX86LinuxFS(params, callback) {
     
     var gem5Options = '-v --dot-config=config.dot ';
     if (params.trace) {
@@ -13,7 +13,7 @@ function runX86LinuxFS(params) {
     gem5Options += '-d ' + outdir;    
 
     var memSize = params.memSize;
-    var memType = 'lpddr3_1600_x32';
+    var memType = params.memType;
     var archOptions = '--disk-image=' + params.diskImage + ' --kernel=x86_64-vmlinux-2.6.22.9.smp --mem-size=' + memSize + ' --mem-type=' + memType;
 
     if (params.l2Cache) {
@@ -67,7 +67,28 @@ function runX86LinuxFS(params) {
     };
     
     var proc = exec(cmd, options, function(error, stdout, stderr) {
-        params.callback(error, stdout, stderr, outdir);
+        var array = require('fs').readFileSync(outdir + '/stats.txt').toString().split("\n");
+        var results = [ ];
+        var currentSnapShot = { };
+        for(i in array) {
+            var line = array[i];
+            
+            if (line.indexOf('---------- Begin')==0) {
+                currentSnapShot = { };
+                continue;
+            }
+            else if (line.indexOf('---------- End')==0) {
+                results.push(currentSnapShot);
+                continue;
+            }
+            
+            var t = line.split(/[ ]+/g);
+            if (t.length > 1) {
+                currentSnapShot[t[0]] = t[1];
+            }
+        }
+	
+        callback(error, stdout, stderr, params, results, outdir);
     });
 }
 
