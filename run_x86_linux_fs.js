@@ -1,5 +1,5 @@
 var exec = require('child_process').exec;
-    
+var _ = require('underscore');
 
 function runX86LinuxFS(params, callback) {
     
@@ -14,7 +14,7 @@ function runX86LinuxFS(params, callback) {
 
     var memSize = params.memSize;
     var memType = params.memType;
-    var archOptions = '--disk-image=' + params.diskImage + ' --kernel=x86_64-vmlinux-2.6.22.9.smp --mem-size=' + memSize + ' --mem-type=' + memType;
+    var archOptions = '--disk-image=' + params.diskImage + '.img --kernel=x86_64-vmlinux-2.6.22.9.smp --mem-size=' + memSize + ' --mem-type=' + memType;
 
     if (params.l2Cache) {
         archOptions += ' --l2cache --caches ';
@@ -29,14 +29,7 @@ function runX86LinuxFS(params, callback) {
 
     /*
  *  --list-mem-types      List available memory types
-  --mem-type=MEM_TYPE   type of memory to use
-    *  Memory aliases:
-           lpddr3_1600_x32 => LPDDR3_1600_x32
-           lpddr2_s4_1066_x32 => LPDDR2_S4_1066_x32
-           ddr3_1600_x64 => DDR3_1600_x64
-           wio_200_x128 => WideIO_200_x128
-           simple_mem => SimpleMemory
-    
+  --mem-type=MEM_TYPE   type of memory to use   
   --mem-size=MEM_SIZE   Specify the physical memory size (single memory)
   --caches              
   --l2cache             
@@ -58,38 +51,55 @@ function runX86LinuxFS(params, callback) {
  */
     
     var cmd = 'tool/gem5/build/X86/gem5.fast ' + gem5Options + ' tool/gem5/configs/example/fs.py ' + archOptions;
-    
+
+    var precmd = './new_experiment_disk.sh ' + params.diskImage + ' "' + params.initCommands + '" ' + params.experimentFolder + '/';
+	    
+
     console.log('Executing:');
+    console.log(precmd);
     console.log(cmd);
     
-    var options = {
-        env: { 'M5_PATH': 'tool/gem5/system/x86' },
-    };
+	var e = _.clone(process.env);
+	e['M5_PATH'] = 'tool/gem5/system/x86';
+
+    var options = { env: e  };
     
-    var proc = exec(cmd, options, function(error, stdout, stderr) {
-        var array = require('fs').readFileSync(outdir + '/stats.txt').toString().split("\n");
-        var results = [ ];
-        var currentSnapShot = { };
-        for(i in array) {
-            var line = array[i];
-            
-            if (line.indexOf('---------- Begin')==0) {
-                currentSnapShot = { };
-                continue;
-            }
-            else if (line.indexOf('---------- End')==0) {
-                results.push(currentSnapShot);
-                continue;
-            }
-            
-            var t = line.split(/[ ]+/g);
-            if (t.length > 1) {
-                currentSnapShot[t[0]] = t[1];
-            }
-        }
+	var preproc = exec(precmd, options, function(error, stdout, stderr) {
+		console.log(stdout);
+		console.log(stderr);
+
+		if (error) {
+			console.error(error);
+			return;
+		}
+
+		var proc = exec(cmd, options, function(error, stdout, stderr) {
+		    var array = require('fs').readFileSync(outdir + '/stats.txt').toString().split("\n");
+		    var results = [ ];
+		    var currentSnapShot = { };
+		    for(i in array) {
+		        var line = array[i];
+		        
+		        if (line.indexOf('---------- Begin')==0) {
+		            currentSnapShot = { };
+		            continue;
+		        }
+		        else if (line.indexOf('---------- End')==0) {
+		            results.push(currentSnapShot);
+		            continue;
+		        }
+		        
+		        var t = line.split(/[ ]+/g);
+		        if (t.length > 1) {
+		            currentSnapShot[t[0]] = t[1];
+		        }
+		    }
 	
-        callback(error, stdout, stderr, params, results, outdir);
-    });
+		    callback(error, stdout, stderr, params, results, outdir);
+		});
+
+	});
+
 }
 
 
